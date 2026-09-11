@@ -10,14 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as JinsiInavyofanyaKaziRouteImport } from './routes/jinsi-inavyofanya-kazi'
 import { Route as MapatoRouteImport } from './routes/mapato'
 import { Route as UsalamaRouteImport } from './routes/usalama'
 import { Route as WanafunziIndexRouteImport } from './routes/wanafunzi.index'
+import { Route as WanafunziStudentIdRouteImport } from './routes/wanafunzi.$studentId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JinsiInavyofanyaKaziRoute = JinsiInavyofanyaKaziRouteImport.update({
@@ -40,49 +47,77 @@ const WanafunziIndexRoute = WanafunziIndexRouteImport.update({
   path: '/wanafunzi/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WanafunziStudentIdRoute = WanafunziStudentIdRouteImport.update({
+  id: '/wanafunzi/$studentId',
+  path: '/wanafunzi/$studentId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/jinsi-inavyofanya-kazi': typeof JinsiInavyofanyaKaziRoute
   '/mapato': typeof MapatoRoute
   '/usalama': typeof UsalamaRoute
+  '/wanafunzi/$studentId': typeof WanafunziStudentIdRoute
   '/wanafunzi/': typeof WanafunziIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/jinsi-inavyofanya-kazi': typeof JinsiInavyofanyaKaziRoute
   '/mapato': typeof MapatoRoute
   '/usalama': typeof UsalamaRoute
+  '/wanafunzi/$studentId': typeof WanafunziStudentIdRoute
   '/wanafunzi': typeof WanafunziIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/jinsi-inavyofanya-kazi': typeof JinsiInavyofanyaKaziRoute
   '/mapato': typeof MapatoRoute
   '/usalama': typeof UsalamaRoute
+  '/wanafunzi/$studentId': typeof WanafunziStudentIdRoute
   '/wanafunzi/': typeof WanafunziIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/jinsi-inavyofanya-kazi' | '/mapato' | '/usalama' | '/wanafunzi/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/jinsi-inavyofanya-kazi' | '/mapato' | '/usalama' | '/wanafunzi'
-  id:
-    | '__root__'
     | '/'
+    | '/auth'
     | '/jinsi-inavyofanya-kazi'
     | '/mapato'
     | '/usalama'
+    | '/wanafunzi/$studentId'
+    | '/wanafunzi/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/auth'
+    | '/jinsi-inavyofanya-kazi'
+    | '/mapato'
+    | '/usalama'
+    | '/wanafunzi/$studentId'
+    | '/wanafunzi'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/jinsi-inavyofanya-kazi'
+    | '/mapato'
+    | '/usalama'
+    | '/wanafunzi/$studentId'
     | '/wanafunzi/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   JinsiInavyofanyaKaziRoute: typeof JinsiInavyofanyaKaziRoute
   MapatoRoute: typeof MapatoRoute
   UsalamaRoute: typeof UsalamaRoute
+  WanafunziStudentIdRoute: typeof WanafunziStudentIdRoute
   WanafunziIndexRoute: typeof WanafunziIndexRoute
 }
 
@@ -93,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jinsi-inavyofanya-kazi': {
@@ -123,14 +165,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WanafunziIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/wanafunzi/$studentId': {
+      id: '/wanafunzi/$studentId'
+      path: '/wanafunzi/$studentId'
+      fullPath: '/wanafunzi/$studentId'
+      preLoaderRoute: typeof WanafunziStudentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   JinsiInavyofanyaKaziRoute: JinsiInavyofanyaKaziRoute,
   MapatoRoute: MapatoRoute,
   UsalamaRoute: UsalamaRoute,
+  WanafunziStudentIdRoute: WanafunziStudentIdRoute,
   WanafunziIndexRoute: WanafunziIndexRoute,
 }
 export const routeTree = rootRouteImport
