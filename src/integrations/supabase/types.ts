@@ -14,7 +14,279 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string
+          student_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          student_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          student_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          sender: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          sender?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opportunities: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          rate_max_tzs: number | null
+          rate_min_tzs: number | null
+          title: string
+          topic: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          rate_max_tzs?: number | null
+          rate_min_tzs?: number | null
+          title: string
+          topic?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          rate_max_tzs?: number | null
+          rate_min_tzs?: number | null
+          title?: string
+          topic?: string | null
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount_tzs: number | null
+          amount_usd: number | null
+          created_at: string
+          external_reference: string | null
+          id: string
+          purpose: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount_tzs?: number | null
+          amount_usd?: number | null
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          purpose?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount_tzs?: number | null
+          amount_usd?: number | null
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          purpose?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          bio: string | null
+          country: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          is_registered: boolean
+          languages: string[]
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          country?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          is_registered?: boolean
+          languages?: string[]
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          country?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          is_registered?: boolean
+          languages?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      students: {
+        Row: {
+          availability: string
+          avatar_url: string | null
+          bio: string | null
+          country: string
+          country_flag: string
+          created_at: string
+          id: string
+          is_online: boolean
+          languages: string[]
+          name: string
+          rate_tzs: number
+          topic: string
+        }
+        Insert: {
+          availability?: string
+          avatar_url?: string | null
+          bio?: string | null
+          country: string
+          country_flag?: string
+          created_at?: string
+          id?: string
+          is_online?: boolean
+          languages?: string[]
+          name: string
+          rate_tzs?: number
+          topic: string
+        }
+        Update: {
+          availability?: string
+          avatar_url?: string | null
+          bio?: string | null
+          country?: string
+          country_flag?: string
+          created_at?: string
+          id?: string
+          is_online?: boolean
+          languages?: string[]
+          name?: string
+          rate_tzs?: number
+          topic?: string
+        }
+        Relationships: []
+      }
+      support_messages: {
+        Row: {
+          body: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      voice_sessions: {
+        Row: {
+          ended_at: string | null
+          id: string
+          started_at: string
+          status: string
+          student_id: string
+          user_id: string
+        }
+        Insert: {
+          ended_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+          student_id: string
+          user_id: string
+        }
+        Update: {
+          ended_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+          student_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_sessions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
