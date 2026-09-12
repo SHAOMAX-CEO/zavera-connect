@@ -1,11 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Clock, Lock, Phone, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { RegisterDialog } from "@/components/zavera/RegisterDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { REGISTER_URL, useT } from "@/lib/i18n";
+import { REGISTER_URL, useLang, useT } from "@/lib/i18n";
+import { askStudent } from "@/lib/student-chat.functions";
 import { studentQueryOptions } from "@/lib/students";
 
 export const Route = createFileRoute("/wanafunzi/$studentId")({
@@ -34,15 +36,18 @@ const INTRO_SECONDS = 30;
 
 function ChatPage() {
   const t = useT();
+  const { lang } = useLang();
   const { studentId } = Route.useParams();
   const { user, isRegistered } = useAuth();
   const { data: student, isLoading, isError } = useQuery(studentQueryOptions(studentId));
+  const ask = useServerFn(askStudent);
 
   const [messages, setMessages] = useState<ChatRow[]>([]);
   const [input, setInput] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(INTRO_SECONDS);
   const [gate, setGate] = useState<"none" | "chat" | "voice">("none");
+  const [typing, setTyping] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   const locked = !isRegistered && secondsLeft <= 0;
@@ -125,17 +130,13 @@ function ChatPage() {
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
-  }, [messages.length]);
+  }, [messages.length, typing]);
 
-  const send = async () => {
-    const body = input.trim();
-    if (!body || locked) return;
-    setInput("");
-
+  const appendStudentReply = async (body: string) => {
     if (user && conversationId) {
       const { data, error } = await supabase
         .from("messages")
-        .insert({ conversation_id: conversationId, user_id: user.id, sender: "user", body })
+        .insert({ conversation_id: conversationId, user_id: user.id, sender: "student", body })
         .select("id, sender, body, created_at")
         .single();
       if (!error && data) {
@@ -149,16 +150,89 @@ function ChatPage() {
         return;
       }
     }
-
     setMessages((prev) => [
       ...prev,
       {
-        id: `local-${Date.now()}`,
-        sender: "user",
+        id: `student-${Date.now()}`,
+        sender: "student",
         body,
         created_at: new Date().toISOString(),
       },
     ]);
+  };
+
+  /** Ask the student for a reply, then hold it until a natural typing pause has passed. */
+  const requestStudentReply = async (history: ChatRow[]) => {
+    if (!student) return;
+    setTyping(true);
+    const startedAt = Date.now();
+    try {
+      const result = await ask({
+        data: {
+          lang,
+          student: {
+            name: student.name,
+            country: student.country,
+            topic: student.topic,
+            languages: student.languages,
+          },
+          messages: history
+            .filter((m) => m.body.trim())
+            .slice(-12)
+            .map((m) => ({
+              role: m.sender === "student" ? ("student" as const) : ("user" as const),
+              content: m.body,
+            })),
+        },
+      });
+      if (!result.ok || !result.reply) return;
+
+      const length = result.reply.length;
+      const [min, max] = length <= 80 ? [800, 1200] : length <= 200 ? [1500, 2500] : [3000, 4000];
+      const target = min + Math.random() * (max - min);
+      const remaining = Math.max(0, target - (Date.now() - startedAt));
+      await new Promise((resolve) => window.setTimeout(resolve, remaining));
+      setTyping(false);
+      await appendStudentReply(result.reply);
+    } finally {
+      setTyping(false);
+    }
+  };
+
+  const send = async () => {
+    const body = input.trim();
+    if (!body || locked) return;
+    setInput("");
+
+    if (user && conversationId) {
+      const { data, error } = await supabase
+        .from("messages")
+        .insert({ conversation_id: conversationId, user_id: user.id, sender: "user", body })
+        .select("id, sender, body, created_at")
+        .single();
+      if (!error && data) {
+        const next = messages.some((m) => m.id === data.id)
+          ? messages
+          : [...messages, data as ChatRow];
+        setMessages(next);
+        await supabase
+          .from("conversations")
+          .update({ last_message_at: new Date().toISOString() })
+          .eq("id", conversationId);
+        void requestStudentReply(next);
+        return;
+      }
+    }
+
+    const local: ChatRow = {
+      id: `local-${Date.now()}`,
+      sender: "user",
+      body,
+      created_at: new Date().toISOString(),
+    };
+    const next = [...messages, local];
+    setMessages(next);
+    void requestStudentReply(next);
   };
 
   if (isLoading) {
@@ -249,17 +323,42 @@ function ChatPage() {
             `Start by introducing yourself to ${student.name} and what you can share.`,
           )}
         </p>
-        {messages.map((m) => (
-          <div key={m.id} className="ml-auto max-w-[85%]">
-            <div className="rounded-2xl bg-primary px-3 py-2 text-primary-foreground">{m.body}</div>
-            <div className="mt-1 text-right text-[11px] text-muted-foreground">
-              {new Date(m.created_at).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+        {messages.map((m) => {
+          const mine = m.sender !== "student";
+          return (
+            <div key={m.id} className={mine ? "ml-auto max-w-[85%]" : "mr-auto max-w-[85%]"}>
+              <div
+                className={
+                  mine
+                    ? "rounded-2xl bg-primary px-3 py-2 text-primary-foreground"
+                    : "rounded-2xl border border-border bg-card/80 px-3 py-2 whitespace-pre-wrap text-foreground"
+                }
+              >
+                {m.body}
+              </div>
+              <div
+                className={`mt-1 text-[11px] text-muted-foreground ${mine ? "text-right" : "text-left"}`}
+              >
+                {new Date(m.created_at).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
+            </div>
+          );
+        })}
+        {typing ? (
+          <div className="mr-auto max-w-[85%]">
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card/80 px-3 py-2 text-muted-foreground">
+              <span className="text-xs">{t("Anaandika", "Typing")}</span>
+              <span className="flex items-end gap-1">
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:0ms]" />
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:150ms]" />
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:300ms]" />
+              </span>
             </div>
           </div>
-        ))}
+        ) : null}
         {messages.length > 0 ? (
           <p className="text-center text-xs text-muted-foreground">
             {student.is_online
