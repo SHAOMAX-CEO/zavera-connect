@@ -1,11 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Clock, Lock, Phone, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { RegisterDialog } from "@/components/zavera/RegisterDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { REGISTER_URL, useT } from "@/lib/i18n";
+import { REGISTER_URL, useLang, useT } from "@/lib/i18n";
+import { askStudent } from "@/lib/student-chat.functions";
 import { studentQueryOptions } from "@/lib/students";
 
 export const Route = createFileRoute("/wanafunzi/$studentId")({
