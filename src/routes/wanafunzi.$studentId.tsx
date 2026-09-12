@@ -191,18 +191,22 @@ function ChatPage() {
         <ArrowLeft className="size-4" /> {t("Wanafunzi wote", "All students")}
       </Link>
 
-      <div className="glass mt-4 flex flex-wrap items-center gap-4 rounded-2xl p-4">
-        <div className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-gold/30 font-display font-bold">
-          {student.name.slice(0, 2)}
+      <div className="glass mt-4 rounded-2xl p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-gold/30 font-display font-bold">
+            {student.name.slice(0, 2)}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate font-display text-lg font-semibold">{student.name}</h1>
+            <p className="truncate text-sm text-muted-foreground">
+              {student.country_flag} {student.country} · {student.topic}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">
+              {student.languages.join(" · ")}
+            </p>
+          </div>
         </div>
-        <div className="min-w-0 flex-1">
-          <h1 className="font-display text-lg font-semibold">{student.name}</h1>
-          <p className="text-sm text-muted-foreground">
-            {student.country_flag} {student.country} · {student.topic}
-          </p>
-          <p className="text-xs text-muted-foreground">{student.languages.join(" · ")}</p>
-        </div>
-        <div className="flex items-center gap-2">
+        <div className="mt-3 flex items-center justify-between gap-2">
           <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-1 text-xs text-gold">
             TZS {student.rate_tzs.toLocaleString("en-US")}/{t("saa", "hr")}
           </span>
