@@ -323,17 +323,42 @@ function ChatPage() {
             `Start by introducing yourself to ${student.name} and what you can share.`,
           )}
         </p>
-        {messages.map((m) => (
-          <div key={m.id} className="ml-auto max-w-[85%]">
-            <div className="rounded-2xl bg-primary px-3 py-2 text-primary-foreground">{m.body}</div>
-            <div className="mt-1 text-right text-[11px] text-muted-foreground">
-              {new Date(m.created_at).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+        {messages.map((m) => {
+          const mine = m.sender !== "student";
+          return (
+            <div key={m.id} className={mine ? "ml-auto max-w-[85%]" : "mr-auto max-w-[85%]"}>
+              <div
+                className={
+                  mine
+                    ? "rounded-2xl bg-primary px-3 py-2 text-primary-foreground"
+                    : "rounded-2xl border border-border bg-card/80 px-3 py-2 whitespace-pre-wrap text-foreground"
+                }
+              >
+                {m.body}
+              </div>
+              <div
+                className={`mt-1 text-[11px] text-muted-foreground ${mine ? "text-right" : "text-left"}`}
+              >
+                {new Date(m.created_at).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
+            </div>
+          );
+        })}
+        {typing ? (
+          <div className="mr-auto max-w-[85%]">
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-border bg-card/80 px-3 py-2 text-muted-foreground">
+              <span className="text-xs">{t("Anaandika", "Typing")}</span>
+              <span className="flex items-end gap-1">
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:0ms]" />
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:150ms]" />
+                <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:300ms]" />
+              </span>
             </div>
           </div>
-        ))}
+        ) : null}
         {messages.length > 0 ? (
           <p className="text-center text-xs text-muted-foreground">
             {student.is_online
