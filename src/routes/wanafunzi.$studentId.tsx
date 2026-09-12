@@ -36,15 +36,18 @@ const INTRO_SECONDS = 30;
 
 function ChatPage() {
   const t = useT();
+  const { lang } = useLang();
   const { studentId } = Route.useParams();
   const { user, isRegistered } = useAuth();
   const { data: student, isLoading, isError } = useQuery(studentQueryOptions(studentId));
+  const ask = useServerFn(askStudent);
 
   const [messages, setMessages] = useState<ChatRow[]>([]);
   const [input, setInput] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(INTRO_SECONDS);
   const [gate, setGate] = useState<"none" | "chat" | "voice">("none");
+  const [typing, setTyping] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   const locked = !isRegistered && secondsLeft <= 0;
