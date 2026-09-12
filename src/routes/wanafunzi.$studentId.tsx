@@ -130,17 +130,13 @@ function ChatPage() {
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
-  }, [messages.length]);
+  }, [messages.length, typing]);
 
-  const send = async () => {
-    const body = input.trim();
-    if (!body || locked) return;
-    setInput("");
-
+  const appendStudentReply = async (body: string) => {
     if (user && conversationId) {
       const { data, error } = await supabase
         .from("messages")
-        .insert({ conversation_id: conversationId, user_id: user.id, sender: "user", body })
+        .insert({ conversation_id: conversationId, user_id: user.id, sender: "student", body })
         .select("id, sender, body, created_at")
         .single();
       if (!error && data) {
@@ -154,16 +150,89 @@ function ChatPage() {
         return;
       }
     }
-
     setMessages((prev) => [
       ...prev,
       {
-        id: `local-${Date.now()}`,
-        sender: "user",
+        id: `student-${Date.now()}`,
+        sender: "student",
         body,
         created_at: new Date().toISOString(),
       },
     ]);
+  };
+
+  /** Ask the student for a reply, then hold it until a natural typing pause has passed. */
+  const requestStudentReply = async (history: ChatRow[]) => {
+    if (!student) return;
+    setTyping(true);
+    const startedAt = Date.now();
+    try {
+      const result = await ask({
+        data: {
+          lang,
+          student: {
+            name: student.name,
+            country: student.country,
+            topic: student.topic,
+            languages: student.languages,
+          },
+          messages: history
+            .filter((m) => m.body.trim())
+            .slice(-12)
+            .map((m) => ({
+              role: m.sender === "student" ? ("student" as const) : ("user" as const),
+              content: m.body,
+            })),
+        },
+      });
+      if (!result.ok || !result.reply) return;
+
+      const length = result.reply.length;
+      const [min, max] = length <= 80 ? [800, 1200] : length <= 200 ? [1500, 2500] : [3000, 4000];
+      const target = min + Math.random() * (max - min);
+      const remaining = Math.max(0, target - (Date.now() - startedAt));
+      await new Promise((resolve) => window.setTimeout(resolve, remaining));
+      setTyping(false);
+      await appendStudentReply(result.reply);
+    } finally {
+      setTyping(false);
+    }
+  };
+
+  const send = async () => {
+    const body = input.trim();
+    if (!body || locked) return;
+    setInput("");
+
+    if (user && conversationId) {
+      const { data, error } = await supabase
+        .from("messages")
+        .insert({ conversation_id: conversationId, user_id: user.id, sender: "user", body })
+        .select("id, sender, body, created_at")
+        .single();
+      if (!error && data) {
+        const next = messages.some((m) => m.id === data.id)
+          ? messages
+          : [...messages, data as ChatRow];
+        setMessages(next);
+        await supabase
+          .from("conversations")
+          .update({ last_message_at: new Date().toISOString() })
+          .eq("id", conversationId);
+        void requestStudentReply(next);
+        return;
+      }
+    }
+
+    const local: ChatRow = {
+      id: `local-${Date.now()}`,
+      sender: "user",
+      body,
+      created_at: new Date().toISOString(),
+    };
+    const next = [...messages, local];
+    setMessages(next);
+    void requestStudentReply(next);
   };
 
   if (isLoading) {
