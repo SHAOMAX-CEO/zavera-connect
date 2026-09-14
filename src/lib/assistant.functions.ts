@@ -57,7 +57,10 @@ export const askAssistant = createServerFn({ method: "POST" })
         model: "google/gemini-3.8-flash",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          { role: "system", content: `Preferred reply language: ${data.lang}` },
+          {
+            role: "system",
+            content: `Site language setting: ${data.lang}. Use it only as a fallback — always mirror the language of the user's latest message.`,
+          },
           ...data.messages,
         ],
       }),
