@@ -199,6 +199,30 @@ function ChatPage() {
     }
   };
 
+  // The student greets first, like a real person opening the conversation.
+  const greetedRef = useRef(false);
+  useEffect(() => {
+    if (!student || greetedRef.current) return;
+    if (messages.length > 0) {
+      greetedRef.current = true;
+      return;
+    }
+    if (user && !conversationId) return;
+    greetedRef.current = true;
+    void requestStudentReply([
+      {
+        id: "opening",
+        sender: "user",
+        body:
+          lang === "sw"
+            ? "(Mtu huyu amefungua mazungumzo. Mtakie salamu wa kwanza kwa uchangamfu, jitambulishe kwa kifupi na eleza unataka kujifunza kuhusu Afrika.)"
+            : "(This person just opened the chat. Send the first warm greeting, introduce yourself briefly and say you want to learn about Africa.)",
+        created_at: new Date().toISOString(),
+      },
+    ]);
+  }, [student?.id, conversationId, user?.id, messages.length]);
+
+
   const send = async () => {
     const body = input.trim();
     if (!body || locked) return;

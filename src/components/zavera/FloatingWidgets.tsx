@@ -1,6 +1,6 @@
 import { useServerFn } from "@tanstack/react-start";
 import { Headset, Mail, MessageCircle, Send, Sparkle, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { askAssistant } from "@/lib/assistant.functions";
 import { SUPPORT_EMAIL, WHATSAPP_CHANNEL, useLang, useT } from "@/lib/i18n";
 
@@ -13,15 +13,24 @@ export function FloatingWidgets() {
   const [panel, setPanel] = useState<"none" | "ai" | "support">("none");
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      role: "assistant",
-      content: t(
-        "Habari! Mimi ni AFRICAN Assistance. Niulize kuhusu ZAVERA, usajili, au jinsi mazungumzo yanafanya kazi.",
-        "Hello! I am AFRICAN Assistance. Ask me about ZAVERA, registration, or how conversations work.",
-      ),
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const welcome = t(
+    "Habari 👋 Karibu ZAVERA! Mimi ni msaidizi wako wa ZAVERA. Ninaweza kukusaidia kuelewa ZAVERA, kufungua akaunti, kujua jinsi mtandao unafanya kazi, na kujibu maswali kuhusu Afrika. Nikusaidie nini leo?",
+    "Hello 👋 Welcome to ZAVERA! I am your ZAVERA AI Assistant. I can help you understand ZAVERA, create an account, learn how the platform works, and answer questions about Africa. How can I help you today?",
+  );
+
+  // The assistant greets first the moment the panel is opened.
+  useEffect(() => {
+    if (panel !== "ai") return;
+    setMessages((prev) => (prev.length ? prev : [{ role: "assistant", content: welcome }]));
+  }, [panel, welcome]);
+
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages.length, pending, panel]);
+
 
   const send = async () => {
     const text = input.trim();
@@ -80,25 +89,31 @@ export function FloatingWidgets() {
               <X className="size-4 text-muted-foreground" />
             </button>
           </div>
-          <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3 text-sm">
+          <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-3 text-sm">
             {messages.map((m, i) => (
               <div
                 key={i}
                 className={
                   m.role === "user"
-                    ? "ml-auto max-w-[85%] rounded-xl bg-primary px-3 py-2 text-primary-foreground"
-                    : "max-w-[90%] whitespace-pre-wrap text-foreground/90"
+                    ? "ml-auto max-w-[85%] animate-in rounded-xl bg-primary px-3 py-2 text-primary-foreground fade-in slide-in-from-bottom-1"
+                    : "max-w-[90%] animate-in whitespace-pre-wrap text-foreground/90 fade-in slide-in-from-bottom-1"
                 }
               >
                 {m.content}
               </div>
             ))}
             {pending ? (
-              <div className="animate-pulse text-muted-foreground">
-                {t("Inafikiri...", "Thinking...")}
+              <div className="inline-flex items-center gap-2 text-muted-foreground">
+                <span className="text-xs">{t("Anaandika", "Typing")}</span>
+                <span className="flex items-end gap-1">
+                  <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:0ms]" />
+                  <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:150ms]" />
+                  <span className="size-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:300ms]" />
+                </span>
               </div>
             ) : null}
           </div>
+
           <form
             className="flex items-center gap-2 border-t border-border/70 p-3"
             onSubmit={(e) => {
