@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { MessageSquare, Phone } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { studentPhoto } from "@/lib/student-photos";
 import type { Student } from "@/lib/students";
+
 import { cn } from "@/lib/utils";
 
 const availabilityLabels: Record<string, [string, string]> = {
@@ -13,11 +15,13 @@ const availabilityLabels: Record<string, [string, string]> = {
 export function StudentCard({ student, onVoice }: { student: Student; onVoice: () => void }) {
   const t = useT();
   const label = availabilityLabels[student.availability] ?? availabilityLabels["offline"]!;
+  const photo = studentPhoto(student);
   const initials = student.name
     .split(" ")
     .map((p) => p[0])
     .join("")
     .slice(0, 2);
+
 
   return (
     <article className="glass flex flex-col gap-4 rounded-2xl p-5">

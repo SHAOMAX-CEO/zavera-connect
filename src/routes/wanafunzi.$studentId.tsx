@@ -291,9 +291,21 @@ function ChatPage() {
 
       <div className="glass mt-4 rounded-2xl p-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-gold/30 font-display font-bold">
-            {student.name.slice(0, 2)}
-          </div>
+          {studentPhoto(student) ? (
+            <img
+              src={studentPhoto(student)!}
+              alt={`${student.name} — ${student.country}`}
+              width={96}
+              height={96}
+              className="size-12 shrink-0 rounded-2xl object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-gold/30 font-display font-bold">
+              {student.name.slice(0, 2)}
+            </div>
+          )}
+
           <div className="min-w-0 flex-1">
             <h1 className="truncate font-display text-lg font-semibold">{student.name}</h1>
             <p className="truncate text-sm text-muted-foreground">
