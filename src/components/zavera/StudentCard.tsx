@@ -22,10 +22,12 @@ export function StudentCard({ student, onVoice }: { student: Student; onVoice: (
   return (
     <article className="glass flex flex-col gap-4 rounded-2xl p-5">
       <div className="flex items-start gap-3">
-        {student.avatar_url ? (
+        {photo ? (
           <img
-            src={student.avatar_url}
-            alt={student.name}
+            src={photo}
+            alt={`${student.name} — ${student.country}`}
+            width={112}
+            height={112}
             className="size-14 rounded-2xl object-cover"
             loading="lazy"
           />
@@ -34,6 +36,7 @@ export function StudentCard({ student, onVoice }: { student: Student; onVoice: (
             {initials}
           </div>
         )}
+
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-display text-base font-semibold">{student.name}</h3>
           <p className="text-sm text-muted-foreground">
