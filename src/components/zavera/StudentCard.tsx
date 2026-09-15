@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { MessageSquare, Phone } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { studentPhoto } from "@/lib/student-photos";
 import type { Student } from "@/lib/students";
+
 import { cn } from "@/lib/utils";
 
 const availabilityLabels: Record<string, [string, string]> = {
@@ -13,19 +15,23 @@ const availabilityLabels: Record<string, [string, string]> = {
 export function StudentCard({ student, onVoice }: { student: Student; onVoice: () => void }) {
   const t = useT();
   const label = availabilityLabels[student.availability] ?? availabilityLabels["offline"]!;
+  const photo = studentPhoto(student);
   const initials = student.name
     .split(" ")
     .map((p) => p[0])
     .join("")
     .slice(0, 2);
 
+
   return (
     <article className="glass flex flex-col gap-4 rounded-2xl p-5">
       <div className="flex items-start gap-3">
-        {student.avatar_url ? (
+        {photo ? (
           <img
-            src={student.avatar_url}
-            alt={student.name}
+            src={photo}
+            alt={`${student.name} — ${student.country}`}
+            width={112}
+            height={112}
             className="size-14 rounded-2xl object-cover"
             loading="lazy"
           />
@@ -34,6 +40,7 @@ export function StudentCard({ student, onVoice }: { student: Student; onVoice: (
             {initials}
           </div>
         )}
+
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-display text-base font-semibold">{student.name}</h3>
           <p className="text-sm text-muted-foreground">
