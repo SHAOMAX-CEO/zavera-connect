@@ -8,6 +8,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { REGISTER_URL, useLang, useT } from "@/lib/i18n";
 import { askStudent } from "@/lib/student-chat.functions";
+import { studentPhoto } from "@/lib/student-photos";
+
 import { studentQueryOptions } from "@/lib/students";
 
 export const Route = createFileRoute("/wanafunzi/$studentId")({
