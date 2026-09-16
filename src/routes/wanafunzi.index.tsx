@@ -36,7 +36,8 @@ function StudentsPage() {
   const [query, setQuery] = useState("");
   const [topic, setTopic] = useState("all");
   const [country, setCountry] = useState("all");
-  const [gateOpen, setGateOpen] = useState(false);
+  const [gate, setGate] = useState<"none" | "voice" | "offline">("none");
+  const [visible, setVisible] = useState(24);
 
   const topics = useMemo(
     () => Array.from(new Set((data ?? []).map((s) => s.topic))).sort(),
@@ -129,21 +130,45 @@ function StudentsPage() {
             {t("Hakuna mwanafunzi anayelingana na utafutaji wako.", "No student matches your search.")}
           </p>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((s) => (
-              <StudentCard
-                key={s.id}
-                student={s}
-                onVoice={() => {
-                  if (!isRegistered) setGateOpen(true);
-                }}
-              />
-            ))}
-          </div>
+          <>
+            <p className="mb-4 text-sm text-muted-foreground">
+              {t(
+                `Wanafunzi ${filtered.length} wanapatikana.`,
+                `${filtered.length} students available.`,
+              )}
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.slice(0, visible).map((s) => (
+                <StudentCard
+                  key={s.id}
+                  student={s}
+                  onVoice={() => {
+                    if (!isRegistered) setGate("voice");
+                  }}
+                  onOffline={() => setGate("offline")}
+                />
+              ))}
+            </div>
+            {filtered.length > visible ? (
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setVisible((v) => v + 24)}
+                  className="rounded-xl border border-primary/40 bg-primary/10 px-5 py-3 text-sm font-semibold"
+                >
+                  {t("Onyesha wanafunzi zaidi", "Show more students")}
+                </button>
+              </div>
+            ) : null}
+          </>
         )}
       </div>
 
-      <RegisterDialog open={gateOpen} onOpenChange={setGateOpen} reason="voice" />
+      <RegisterDialog
+        open={gate !== "none"}
+        onOpenChange={(open) => setGate(open ? gate : "none")}
+        reason={gate === "offline" ? "offline" : "voice"}
+      />
     </div>
   );
 }
