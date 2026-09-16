@@ -12,7 +12,15 @@ const availabilityLabels: Record<string, [string, string]> = {
   offline: ["Hayupo", "Offline"],
 };
 
-export function StudentCard({ student, onVoice }: { student: Student; onVoice: () => void }) {
+export function StudentCard({
+  student,
+  onVoice,
+  onOffline,
+}: {
+  student: Student;
+  onVoice: () => void;
+  onOffline?: () => void;
+}) {
   const t = useT();
   const label = availabilityLabels[student.availability] ?? availabilityLabels["offline"]!;
   const photo = studentPhoto(student);
@@ -82,13 +90,23 @@ export function StudentCard({ student, onVoice }: { student: Student; onVoice: (
       ) : null}
 
       <div className="mt-auto grid grid-cols-2 gap-2">
-        <Link
-          to="/wanafunzi/$studentId"
-          params={{ studentId: student.id }}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          <MessageSquare className="size-4" /> CHAT
-        </Link>
+        {student.is_online ? (
+          <Link
+            to="/wanafunzi/$studentId"
+            params={{ studentId: student.id }}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            <MessageSquare className="size-4" /> CHAT
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={onOffline}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary/60 px-3 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            <MessageSquare className="size-4" /> CHAT
+          </button>
+        )}
         <button
           type="button"
           onClick={onVoice}
