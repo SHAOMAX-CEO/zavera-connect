@@ -48,7 +48,7 @@ function ChatPage() {
   const [input, setInput] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(INTRO_SECONDS);
-  const [gate, setGate] = useState<"none" | "chat" | "voice">("none");
+  const [gate, setGate] = useState<"none" | "chat" | "voice" | "reward">("none");
   const [typing, setTyping] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -63,8 +63,10 @@ function ChatPage() {
     return () => window.clearInterval(id);
   }, [isRegistered]);
 
+  // When the session time is over: reward notice if they really talked, otherwise the register gate.
   useEffect(() => {
-    if (!isRegistered && secondsLeft === 0) setGate("chat");
+    if (isRegistered || secondsLeft !== 0) return;
+    setGate(messages.some((m) => m.sender !== "student") ? "reward" : "chat");
   }, [isRegistered, secondsLeft]);
 
   // Signed-in members get a persisted conversation with live message updates.
@@ -460,7 +462,7 @@ function ChatPage() {
       <RegisterDialog
         open={gate !== "none"}
         onOpenChange={(open) => setGate(open ? gate : "none")}
-        reason={gate === "voice" ? "voice" : "chat"}
+        reason={gate === "voice" ? "voice" : gate === "reward" ? "reward" : "chat"}
       />
     </div>
   );
