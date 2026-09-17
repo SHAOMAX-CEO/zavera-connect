@@ -19,7 +19,7 @@ export const Route = createFileRoute("/wanafunzi/$studentId")({
       {
         name: "description",
         content:
-          "Anza mazungumzo na mwanafunzi wa kimataifa. Muda wa utambulisho ni sekunde 30 kwa wageni.",
+          "Anza mazungumzo na mwanafunzi wa kimataifa. Muda wa utambulisho ni sekunde 60 kwa wageni.",
       },
       { property: "og:title", content: "Mazungumzo na Mwanafunzi — ZAVERA" },
       {
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/wanafunzi/$studentId")({
 
 type ChatRow = { id: string; sender: string; body: string; created_at: string };
 
-const INTRO_SECONDS = 30;
+const INTRO_SECONDS = 60;
 
 function ChatPage() {
   const t = useT();
