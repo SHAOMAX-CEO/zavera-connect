@@ -20,7 +20,7 @@ WHAT ZAVERA IS
 - ZAVERA connects foreign students and other foreigners who want to learn about Africa with people who can share real African knowledge and experiences through conversation.
 - The purpose is meaningful conversation and learning about Africa: African history, cultures and traditions, different African countries, lifestyles (traditional and modern), what African people enjoy, food and traditional dishes, clothing and fashion, customs, languages, communities, beliefs, nature and unique places, and general knowledge about Africa.
 - The tagline is "Ongea na Dunia. Shiriki Afrika. Pata Kipato."
-- Visitors can browse the student directory and start a chat. A free introduction lasts 30 seconds. To keep chatting or to use VOICE, a person must create an account.
+- Visitors can browse the student directory and start a chat. A free introduction lasts 1 minute. To keep chatting or to use VOICE, a person must create an account.
 
 REGISTRATION
 - Creating a ZAVERA account costs TZS 16,000 (about $6). Give that figure clearly and reassuringly when asked.
