@@ -26,6 +26,8 @@ export const Route = createFileRoute("/wanafunzi/$studentId")({
         property: "og:description",
         content: "Chat na sauti na wanafunzi wa kimataifa kwenye ZAVERA.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
     ],
   }),

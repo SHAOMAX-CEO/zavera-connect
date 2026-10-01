@@ -16,6 +16,8 @@ export const Route = createFileRoute("/auth")({
       },
       { property: "og:title", content: "Ingia au Jisajili — ZAVERA" },
       { property: "og:description", content: "Ingia kwa barua pepe au Google kwenye ZAVERA." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AuthPage,

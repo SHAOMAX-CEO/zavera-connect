@@ -24,6 +24,8 @@ export const Route = createFileRoute("/")({
         content:
           "Ungana na wanafunzi wa kimataifa wanaotaka kujifunza utamaduni, historia, vyakula na lugha za Afrika.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,

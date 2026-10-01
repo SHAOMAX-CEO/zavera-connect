@@ -15,6 +15,8 @@ export const Route = createFileRoute("/jinsi-inavyofanya-kazi")({
         property: "og:description",
         content: "Hatua nne rahisi: Unda Account, Chagua Mwanafunzi, Anza Mazungumzo, Kamilisha Huduma.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (
