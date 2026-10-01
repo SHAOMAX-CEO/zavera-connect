@@ -24,6 +24,8 @@ export const Route = createFileRoute("/wanafunzi/")({
         property: "og:description",
         content: "Chagua mwanafunzi, anza mazungumzo ya maandishi au sauti kwenye ZAVERA.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: StudentsPage,

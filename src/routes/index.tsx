@@ -3,6 +3,7 @@ import { ArrowRight, Globe2, Sparkle } from "lucide-react";
 import heroImage from "@/assets/zavera-hero.jpg";
 import { OnlineIndicator } from "@/components/zavera/OnlineIndicator";
 import { EarningsSection, HowItWorksSection, TrustSection } from "@/components/zavera/Sections";
+import { Testimonials } from "@/components/zavera/Testimonials";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
@@ -23,6 +24,8 @@ export const Route = createFileRoute("/")({
         content:
           "Ungana na wanafunzi wa kimataifa wanaotaka kujifunza utamaduni, historia, vyakula na lugha za Afrika.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
@@ -99,6 +102,7 @@ function Index() {
       <EarningsSection />
       <HowItWorksSection />
       <TrustSection />
+      <Testimonials />
     </>
   );
 }

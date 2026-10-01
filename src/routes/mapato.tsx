@@ -15,6 +15,8 @@ export const Route = createFileRoute("/mapato")({
         property: "og:description",
         content: "Viwango vya mfano, ada ya usajili, na kanusho la wazi kuhusu mapato.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (

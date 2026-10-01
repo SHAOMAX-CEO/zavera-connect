@@ -15,6 +15,8 @@ export const Route = createFileRoute("/usalama")({
         property: "og:description",
         content: "Faragha, usalama wa akaunti, malipo ya wazi na hakuna ahadi za uongo.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: () => (

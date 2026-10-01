@@ -23,7 +23,10 @@ export function RegisterDialog({ open, onOpenChange, reason }: Props) {
     reason === "voice"
       ? t("Sauti ni kwa wanachama", "Voice is for members")
       : reason === "offline"
-        ? t("Wanafunzi wa kigeni hawapo mtandaoni sasa.", "Foreign students are not online right now.")
+        ? t(
+            "Mtu huyu hayupo mtandaoni kwa sasa, tafadhali chagua mtu mwingine.",
+            "This person is currently offline, please choose another person.",
+          )
         : reason === "reward"
           ? t("Mazungumzo mazuri! 🎉", "Great conversation! 🎉")
           : t("Muda wa utambulisho umeisha", "Introduction time is over");
