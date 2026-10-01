@@ -3,6 +3,7 @@ import { ArrowRight, Globe2, Sparkle } from "lucide-react";
 import heroImage from "@/assets/zavera-hero.jpg";
 import { OnlineIndicator } from "@/components/zavera/OnlineIndicator";
 import { EarningsSection, HowItWorksSection, TrustSection } from "@/components/zavera/Sections";
+import { Testimonials } from "@/components/zavera/Testimonials";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
@@ -99,6 +100,7 @@ function Index() {
       <EarningsSection />
       <HowItWorksSection />
       <TrustSection />
+      <Testimonials />
     </>
   );
 }
