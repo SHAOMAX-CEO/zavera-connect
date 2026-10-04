@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { CircleDollarSign, MessageCircle, Wifi } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { playChime } from "@/lib/chime";
 import { useT } from "@/lib/i18n";
 import { studentsQueryOptions } from "@/lib/students";
 
@@ -15,6 +17,7 @@ type VerifiedPayment = {
 
 export function ActivityFeed() {
   const t = useT();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { data: students = [] } = useQuery(studentsQueryOptions);
   const [studentIndex, setStudentIndex] = useState(0);
@@ -54,6 +57,32 @@ export function ActivityFeed() {
       }));
     },
   });
+
+  // Real arrivals: students whose status switched to online since the last data refresh.
+  const seenOnline = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    if (!students.length) return;
+    const ids = new Set(onlineStudents.map((s) => s.id));
+    const prev = seenOnline.current;
+    seenOnline.current = ids;
+    if (!prev) return;
+    const arrivals = onlineStudents.filter((s) => !prev.has(s.id));
+    if (!arrivals.length) return;
+    playChime();
+    arrivals.slice(0, 2).forEach((s) =>
+      toast(`${s.country_flag} ${s.name} ${t("ameingia mtandaoni", "just came online")}`, {
+        description: s.topic,
+        action: {
+          label: t("Ongea", "Chat"),
+          onClick: () => void navigate({ to: "/wanafunzi/$studentId", params: { studentId: s.id } }),
+        },
+      }),
+    );
+  }, [onlineStudents, students.length, t, navigate]);
+
+  useEffect(() => {
+    if (showPayment) playChime();
+  }, [showPayment]);
 
   useEffect(() => {
     if (onlineStudents.length < 2) return;
