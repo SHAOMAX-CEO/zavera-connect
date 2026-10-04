@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { REGISTER_URL, useT } from "@/lib/i18n";
+import { OfflineStudentsList } from "./OfflineStudentsList";
 
 export type RegisterReason = "chat" | "voice" | "offline" | "reward";
 
@@ -66,6 +67,8 @@ export function RegisterDialog({ open, onOpenChange, reason }: Props) {
           <DialogTitle className="font-display text-xl">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+
+        {reason === "offline" ? <OfflineStudentsList /> : null}
 
         {reason === "reward" ? null : (
           <div className="rounded-xl border border-gold/30 bg-gold/10 p-4">
