@@ -1,0 +1,11 @@
+{
+  "name": "ZAVERA — Ongea na Dunia",
+  "short_name": "ZAVERA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
+  "icons": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
