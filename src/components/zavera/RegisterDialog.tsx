@@ -62,7 +62,7 @@ export function RegisterDialog({ open, onOpenChange, reason }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass max-w-md border-gold/30">
+      <DialogContent className="glass max-h-[90vh] max-w-md overflow-y-auto border-gold/30">
         <DialogHeader>
           <DialogTitle className="font-display text-xl">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
