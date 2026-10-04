@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791141886550,
+      "tag": "0000_student_notify_requests",
+      "breakpoints": true
+    }
+  ]
+}
