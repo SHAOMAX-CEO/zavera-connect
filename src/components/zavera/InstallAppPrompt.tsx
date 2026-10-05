@@ -73,9 +73,13 @@ export function InstallAppPrompt() {
             variant="outline"
             size="sm"
             onClick={() => setOpen(true)}
-            className="animate-[bounce_2.5s_ease-in-out_infinite] border-gold/50 bg-background/80 font-semibold text-gold shadow-md hover:bg-gold/10 motion-reduce:animate-none"
+            className="relative overflow-hidden border-gold/50 bg-background/80 font-semibold text-gold shadow-md hover:bg-gold/10"
           >
-            <Download className="size-4" />
+            <span
+              aria-hidden="true"
+              className="absolute inset-y-0 -left-8 w-6 animate-[slide-in-right_2.8s_ease-in-out_infinite] bg-gold/20 blur-sm motion-reduce:hidden"
+            />
+            <Download className="size-4 animate-bounce motion-reduce:animate-none" />
             {t("Sakinisha ZAVERA App", "Install ZAVERA App")}
           </Button>
         </div>
