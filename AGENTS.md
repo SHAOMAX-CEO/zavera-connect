@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Social-proof UI must render only verified backend activity and consented testimonials, because fabricated financial claims damage user trust.
+- Phone installation remains manifest-only and uses the browser's native install prompt, because offline caching was not requested.
