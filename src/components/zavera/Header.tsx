@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLang, useT } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
+import { BrandMark } from "./BrandMark";
 
 export function Header() {
   const t = useT();
@@ -22,9 +23,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-gold to-primary font-display text-base font-bold text-gold-foreground">
-            Z
-          </span>
+          <BrandMark compact />
           <span className="font-display text-lg font-bold tracking-[0.18em] text-foreground">
             ZAVERA
           </span>
