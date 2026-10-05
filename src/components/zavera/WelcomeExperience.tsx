@@ -1,4 +1,4 @@
-import { ArrowRight, Volume2, VolumeX } from "lucide-react";
+import { ArrowRight, PartyPopper, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/zavera/BrandMark";
@@ -49,7 +49,8 @@ export function WelcomeExperience() {
 
         <div className="mt-10 w-full sm:mt-12">
           <h1 className="welcome-writing mx-auto w-fit max-w-full font-display text-2xl font-bold text-foreground sm:text-4xl">
-            Welcome! to ZAVERA you're lucky 🎉
+            Welcome! to ZAVERA you're lucky <span className="sr-only">🎉</span>
+            <PartyPopper aria-hidden="true" className="ml-2 inline size-[1em] text-gold" />
           </h1>
           <p className="animate-welcome-copy mx-auto mt-7 max-w-2xl text-base leading-relaxed font-medium text-primary opacity-0 sm:text-xl">
             Fundisha wanafunzi wa kigeni unachojua kuhusu Africa na kuingiza kipato
