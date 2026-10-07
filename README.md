@@ -43,7 +43,7 @@ Key Requirements:
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: zavera-africonnect.vercel.app
+**Live app**: https://zavera-africonnect.vercel.app
 
 ## Build with Lovable
 
