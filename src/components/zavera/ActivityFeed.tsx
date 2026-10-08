@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { playChime } from "@/lib/chime";
 import { useT } from "@/lib/i18n";
 import { studentsQueryOptions } from "@/lib/students";
+import { PAYMENT_POPUP_INTERVAL_MS, paymentPopupFrame } from "@/lib/payment-popup";
 
 type VerifiedPayment = {
   id: string;
@@ -21,8 +22,7 @@ export function ActivityFeed() {
   const { user } = useAuth();
   const { data: students = [] } = useQuery(studentsQueryOptions);
   const [studentIndex, setStudentIndex] = useState(0);
-  const [paymentIndex, setPaymentIndex] = useState(0);
-  const [showPayment, setShowPayment] = useState(false);
+  const [paymentStep, setPaymentStep] = useState(0);
 
   const onlineStudents = useMemo(() => students.filter((student) => student.is_online), [students]);
 
@@ -57,6 +57,8 @@ export function ActivityFeed() {
       }));
     },
   });
+
+  const { visible: showPayment, index: paymentIndex } = paymentPopupFrame(paymentStep, verifiedPayments.length);
 
   // Real arrivals: students whose status switched to online since the last data refresh.
   const seenOnline = useRef<Set<string> | null>(null);
