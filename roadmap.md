@@ -2,6 +2,7 @@
 
 - [x] Add lightweight rotating online-student activity near the top.
 - [x] Add three-second verified-payment popups that remain hidden without confirmed records.
+- [x] Repeat confirmed-payment notices at the top, alternating three seconds visible and three seconds hidden even with one record.
 - [x] Keep offline chat blocked with the requested guidance and existing registration link.
 - [x] Add a truthful testimonials area without invented names or financial claims.
 - [x] Preserve the existing chat, assistant, navigation, styling, and registration flow.

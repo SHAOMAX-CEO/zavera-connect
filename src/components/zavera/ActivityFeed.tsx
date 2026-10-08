@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { playChime } from "@/lib/chime";
 import { useT } from "@/lib/i18n";
 import { studentsQueryOptions } from "@/lib/students";
+import { PAYMENT_POPUP_INTERVAL_MS, paymentPopupFrame } from "@/lib/payment-popup";
 
 type VerifiedPayment = {
   id: string;
@@ -21,14 +22,14 @@ export function ActivityFeed() {
   const { user } = useAuth();
   const { data: students = [] } = useQuery(studentsQueryOptions);
   const [studentIndex, setStudentIndex] = useState(0);
-  const [paymentIndex, setPaymentIndex] = useState(0);
-  const [showPayment, setShowPayment] = useState(false);
+  const [paymentStep, setPaymentStep] = useState(0);
 
   const onlineStudents = useMemo(() => students.filter((student) => student.is_online), [students]);
 
   const { data: verifiedPayments = [] } = useQuery({
     queryKey: ["verified-payments", user?.id],
     enabled: Boolean(user),
+    refetchInterval: 30000,
     queryFn: async (): Promise<VerifiedPayment[]> => {
       if (!user) return [];
       const [{ data: payments, error: paymentsError }, { data: profile, error: profileError }] =
@@ -57,6 +58,8 @@ export function ActivityFeed() {
       }));
     },
   });
+
+  const { visible: showPayment, index: paymentIndex } = paymentPopupFrame(paymentStep, verifiedPayments.length);
 
   // Real arrivals: students whose status switched to online since the last data refresh.
   const seenOnline = useRef<Set<string> | null>(null);
@@ -94,23 +97,14 @@ export function ActivityFeed() {
   }, [onlineStudents.length]);
 
   useEffect(() => {
-    if (!verifiedPayments.length) {
-      setShowPayment(false);
-      return;
-    }
-
-    setShowPayment(true);
-    const hideTimer = window.setTimeout(() => setShowPayment(false), 3000);
-    const rotateTimer = window.setTimeout(() => {
-      setPaymentIndex((current) => (current + 1) % verifiedPayments.length);
-      setShowPayment(true);
-    }, 6000);
-
-    return () => {
-      window.clearTimeout(hideTimer);
-      window.clearTimeout(rotateTimer);
-    };
-  }, [paymentIndex, verifiedPayments.length]);
+    setPaymentStep(0);
+    if (!verifiedPayments.length) return;
+    const timer = window.setInterval(
+      () => setPaymentStep((current) => current + 1),
+      PAYMENT_POPUP_INTERVAL_MS,
+    );
+    return () => window.clearInterval(timer);
+  }, [user?.id, verifiedPayments.length]);
 
   const currentStudent = onlineStudents[studentIndex % Math.max(onlineStudents.length, 1)];
   const currentPayment = verifiedPayments[paymentIndex % Math.max(verifiedPayments.length, 1)];
@@ -149,7 +143,7 @@ export function ActivityFeed() {
       {showPayment && currentPayment ? (
         <div
           role="status"
-          className="glass animate-slide-in-right fixed right-4 top-28 z-40 flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-xl p-3 pr-5 shadow-lg motion-reduce:animate-none"
+          className="glass animate-slide-in-right pointer-events-none fixed right-4 top-4 z-40 flex w-80 max-w-[calc(100vw-2rem)] items-center gap-3 rounded-lg p-3 shadow-lg motion-reduce:animate-none"
         >
           <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
             <CircleDollarSign className="size-5" />
