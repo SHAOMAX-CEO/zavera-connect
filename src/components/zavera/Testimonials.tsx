@@ -1,4 +1,4 @@
-import { BadgeCheck, Quote } from "lucide-react";
+import { Globe2, MessageCircle, Quote } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
 export function Testimonials() {
@@ -14,19 +14,43 @@ export function Testimonials() {
           </span>
         </div>
         <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">
-          {t("Uzoefu halisi, bila madai ya kubuni", "Real experiences, without invented claims")}
+          {t("Maoni ya wanachama na wanafunzi", "Member & student feedback")}
         </h2>
-        <div className="mt-6 flex max-w-2xl items-start gap-3 rounded-xl border border-border bg-card/50 p-5">
-          <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" />
-          <div>
-            <h3 className="font-display font-semibold">
-              {t("Shuhuda zilizothibitishwa zinakuja", "Verified stories are coming soon")}
-            </h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t(
-                "Tutachapisha majina na uzoefu wa kifedha baada ya kupata ruhusa ya watu husika na kuthibitisha taarifa zao.",
-                "Names and financial experiences will appear only after the people involved approve them and their information is verified.",
-              )}
+        <div className="mt-8 grid gap-8 md:grid-cols-2">
+          <div className="border-t border-border pt-5">
+            <div className="flex items-center gap-2 text-gold">
+              <MessageCircle className="size-5" />
+              <h3 className="font-display font-semibold">
+                {t("Uzoefu wa wanachama", "Member experiences")}
+              </h3>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {t("Tunakaribisha maoni kutoka:", "Feedback welcome from:")}
+            </p>
+            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <li>🇹🇿 Tanzania</li>
+              <li>🇰🇪 Kenya</li>
+              <li>🇧🇮 Burundi</li>
+              <li>🇺🇬 Uganda</li>
+              <li>🇲🇼 Malawi</li>
+              <li>🇨🇩 {t("Kongo", "Congo")}</li>
+            </ul>
+            <p className="mt-4 text-sm text-muted-foreground">
+              {t("Hakuna maoni yaliyothibitishwa ya kipato yaliyochapishwa bado.", "No verified earning feedback has been published yet.")}
+            </p>
+          </div>
+          <div className="border-t border-border pt-5">
+            <div className="flex items-center gap-2 text-primary">
+              <Globe2 className="size-5" />
+              <h3 className="font-display font-semibold">
+                {t("Uzoefu wa wanafunzi wa kimataifa", "International student experiences")}
+              </h3>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {t("Maoni kuhusu kujifunza tamaduni, historia na lugha za Afrika kupitia mazungumzo.", "Feedback about learning African cultures, history and languages through conversation.")}
+            </p>
+            <p className="mt-4 text-sm text-muted-foreground">
+              {t("Maoni ya wanafunzi yaliyothibitishwa yanatarajiwa.", "Verified student feedback is coming soon.")}
             </p>
           </div>
         </div>
