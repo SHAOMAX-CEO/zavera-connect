@@ -234,7 +234,25 @@
   }
 }
 
+@keyframes registration-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 1.5rem)); }
+}
+
+.registration-ticker-track {
+  animation: registration-scroll 28s linear infinite;
+}
+
+.registration-ticker:hover .registration-ticker-track,
+.registration-ticker:focus-within .registration-ticker-track {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .registration-ticker-track {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {

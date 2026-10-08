@@ -11,5 +11,6 @@
 
 - Social-proof UI must render only verified backend activity and consented testimonials, because fabricated financial claims damage user trust.
 - Phone installation remains manifest-only and uses the browser's native install prompt, because offline caching was not requested.
+- Registration promotion uses a shared lightweight ticker and the existing registration constant, because every account prompt must keep the same destination.
 
 - AI chat calls go through src/lib/ai-chat.server.ts: LOVABLE_API_KEY (Lovable hosting) first, else GEMINI_API_KEY (+ optional GEMINI_MODEL) for external hosts like Vercel, because the Lovable key is not available off-platform.

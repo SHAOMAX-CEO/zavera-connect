@@ -19,6 +19,7 @@ import { FloatingWidgets } from "@/components/zavera/FloatingWidgets";
 import { ActivityFeed } from "@/components/zavera/ActivityFeed";
 import { InstallAppPrompt } from "@/components/zavera/InstallAppPrompt";
 import { WelcomeExperience } from "@/components/zavera/WelcomeExperience";
+import { RegistrationTicker } from "@/components/zavera/RegistrationTicker";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -149,6 +150,7 @@ function RootComponent() {
         <WelcomeExperience />
         <div className="flex min-h-screen flex-col bg-background">
           <Header />
+          <RegistrationTicker />
           <InstallAppPrompt />
           <ActivityFeed />
           <main className="flex-1">
